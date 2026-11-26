@@ -6,7 +6,7 @@ import {
 
 // true  = uses the fake data from mock.ts (works offline)
 // false = uses the real GitHub API (limit of 60 requests/hour per IP)
-export const USE_MOCK = false;
+export const USE_MOCK = true;
 
 const BASE_URL = "https://api.github.com";
 
@@ -80,6 +80,27 @@ export async function fetchProfile(login: string): Promise<User> {
 }
 
 // TODO Questão 07: implement this function.
+
 export async function fetchRepositories(login: string): Promise<Repository[]> {
-  return [];
+  let repos: Repository[];
+
+  if (USE_MOCK) {
+    await wait(400);
+    repos = MOCK_REPOS[login] ?? [];
+  } else {
+    const response = await fetch(
+      `https://api.github.com/users/${login}/repos?per_page=30&sort=updated`
+    );
+
+    if (!response.ok) {
+      throw new Error(errorMessage(response.status));
+    }
+
+    repos = await response.json();
+  }
+
+  return repos.sort(
+    (a, b) => b.stargazers_count - a.stargazers_count
+  );
 }
+

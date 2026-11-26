@@ -45,6 +45,7 @@ export default function SearchScreen({ onSelect }: Props) {
           placeholder="Digite um usuário"
           placeholderTextColor={colors.placeholder}
           value={query}
+          onChangeText={setQuery}
           autoCapitalize="none"
           autoCorrect={false}
           returnKeyType="search"
@@ -78,12 +79,22 @@ export default function SearchScreen({ onSelect }: Props) {
           data={results}
           keyExtractor={(item) => String(item.id)}
           renderItem={({ item }) => (
-            <UserCard user={item} onPress={onSelect(item.login)} />
-          )}
+          <UserCard
+            user={item}
+            onPress={() => onSelect(item.login)}
+          />
+        )}
           contentContainerStyle={styles.list}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
-          // TODO Questão 09
+          
+          ListEmptyComponent={
+            hasSearched ? (
+              <Text style={styles.emptyText}>
+                Nenhum usuário encontrado.
+              </Text>
+            ) : undefined
+          }
         />
       )}
     </View>
@@ -165,6 +176,14 @@ const styles = StyleSheet.create({
     borderColor: colors.dangerBorder,
     backgroundColor: colors.dangerSoft,
   },
+
+  emptyText: {
+  textAlign: "center",
+  color: "#666",
+  marginTop: 20,
+  fontSize: 15,
+},
+
   errorText: { color: colors.danger, fontSize: 14, fontWeight: "500" },
   loading: { marginTop: 40 },
   list: { paddingBottom: 32 },

@@ -5,6 +5,7 @@ import {
   Pressable,
   FlatList,
   ActivityIndicator,
+  Linking,
   StyleSheet,
   type StyleProp,
   type ViewStyle,
@@ -123,16 +124,31 @@ export default function ProfileScreen({ login, onBack }: Props) {
             {/* TODO Questão 10 */}
 
             <Text style={styles.section}>Repositórios</Text>
-            {repos.length && (
+            {repos.length > 0 ? (
               <Text style={styles.muted}>
-                {repos.length} repositório(s), do mais estrelado ao menos
-                estrelado
+                {repos.length} repositório(s), do mais estrelado ao menos estrelado
+              </Text>
+            ) : (
+              <Text style={styles.muted}>
+                Nenhum repositório público.
               </Text>
             )}
+
+            <Pressable
+              style={styles.githubButton}
+              onPress={() => Linking.openURL(user.html_url)}
+            >
+              <Text style={styles.githubButtonText}>
+                Abrir no GitHub
+              </Text>
+            </Pressable>
           </View>
         }
       />
     </View>
+
+
+    
   );
 }
 
@@ -258,4 +274,17 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   muted: { color: colors.textMuted, fontSize: 14, marginBottom: 12 },
+
+  githubButton: {
+  backgroundColor: "#527F94",
+  padding: 12,
+  borderRadius: 10,
+  alignItems: "center",
+  marginTop: 16,
+},
+githubButtonText: {
+  color: "#fff",
+  fontWeight: "bold",
+  fontSize: 14,
+},
 });

@@ -23,15 +23,16 @@ export function useProfileViewModel(login: string) {
       ]);
       setUser(userData);
       setRepos(reposData);
-      setLoading(false);
     } catch (e) {
       setError((e as Error).message);
+    } finally {
+      setLoading(false);
     }
   }
 
   useEffect(() => {
     load();
-  });
+  }, [login]);
 
   return { user, repos, loading, error };
 }
